@@ -1,0 +1,35 @@
+# Maintainer: Danil Osherov <shindo@yandex-team.ru>
+pkgname=librapidjson-dev
+pkgver=0.99
+pkgrel=1
+pkgdesc="A fast JSON parser/generator for C++ with both SAX/DOM style API"
+arch=('any')
+url=('https://github.com/miloyip/rapidjson/')
+license=('MIT')
+makedepends=('git' 'cmake')
+checkdepends=('valgrind')
+source=("$pkgname"::"git://github.com/shindo/librapidjson#tag=$pkgver")
+md5sums=('SKIP')
+
+prepare() {
+	cd "$srcdir/$pkgname"
+	git submodule update --init --recursive
+}
+
+build() {
+	cd "$srcdir/$pkgname/rapidjson"
+	cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/usr -DRAPIDJSON_HAS_STDSTRING=ON -DRAPIDJSON_BUILD_DOC=OFF
+	make -j $(getconf _NPROCESSORS_ONLN 2>/dev/null || echo 1)
+}
+
+check() {
+	cd "$srcdir/$pkgname/rapidjson"
+	ctest -V
+}
+
+package() {
+	cd "$srcdir/$pkgname/rapidjson"
+
+	make DESTDIR="$pkgdir/" install
+	install -D -m644 license.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
