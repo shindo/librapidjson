@@ -1,0 +1,65 @@
+diff --git a/rapidjson/test/CMakeLists.txt b/rapidjson/test/CMakeLists.txt
+index c698af4..60819c5 100644
+--- a/rapidjson/test/CMakeLists.txt
++++ b/rapidjson/test/CMakeLists.txt
+@@ -1,20 +1,46 @@
+-find_package(GTestSrc)
++PROJECT(RAPIDJSON_TESTS C CXX)
++
++ENABLE_TESTING()
+ 
++FIND_PACKAGE(Threads REQUIRED)
++INCLUDE_DIRECTORIES(${Threads_INCLUDE_DIR})
++
+-IF(GTESTSRC_FOUND)
+-    enable_testing()
++# GTest
++FIND_PACKAGE(GTest)
+ 
+-    if (WIN32 AND (NOT CYGWIN) AND (NOT MINGW))
+-        set(gtest_disable_pthreads ON)
+-        set(gtest_force_shared_crt ON)
+-    endif()
++IF(NOT GTEST_FOUND)
++    FIND_PATH(GTEST_SOURCE_DIR
++        NAMES CMakeLists.txt src/gtest_main.cc
++        PATHS /usr/src/gtest ${CMAKE_SOURCE_DIR}/thirdparty/gtest
++    )
++    FIND_PATH(GTEST_INCLUDE_DIRS
++        NAMES gtest.h
++        PATHS /usr/include/gtest ${CMAKE_SOURCE_DIR}/thirdparty/gtest/include/gtest
++    )
++    IF(GTEST_SOURCE_DIR AND GTEST_INCLUDE_DIRS)
++        MESSAGE(STATUS "GTest sources found. Compiling...")
++        ADD_SUBDIRECTORY(${GTEST_SOURCE_DIR} ${CMAKE_BINARY_DIR}/googletest)
++        SET(GTEST_FOUND 1)
++        SET(GTEST_MAIN_LIBRARIES gtest_main)
++        SET(GTEST_LIBRARIES gtest)
++        SET(GTEST_BOTH_LIBRARIES ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
++    ELSE(GTEST_SOURCE_DIR AND GTEST_INCLUDE_DIRS)
++        MESSAGE(SEND_ERROR "Cannot find required package: GTest")
++    ENDIF(GTEST_SOURCE_DIR AND GTEST_INCLUDE_DIRS)
++ENDIF(NOT GTEST_FOUND)
+ 
+-    add_subdirectory(${GTEST_SOURCE_DIR} ${CMAKE_BINARY_DIR}/googletest)
+-    include_directories(${GTEST_INCLUDE_DIR})
++INCLUDE_DIRECTORIES(${GTEST_INCLUDE_DIRS})
+ 
+-    set(TEST_LIBRARIES gtest gtest_main)
++SET(TEST_LIBRARIES ${GTEST_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+ 
+-    add_custom_target(tests ALL)
+-    add_subdirectory(perftest)
+-    add_subdirectory(unittest)
++ADD_CUSTOM_TARGET(tests ALL)
+ 
+-ENDIF(GTESTSRC_FOUND)
++IF(${CMAKE_VERSION} VERSION_LESS "2.8.4")
++    ADD_CUSTOM_TARGET(copy_tests_data
++        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/bin ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
++        )
++    ADD_DEPENDENCIES(tests copy_tests_data)
++ENDIF(${CMAKE_VERSION} VERSION_LESS "2.8.4")
++
++ADD_SUBDIRECTORY(perftest)
++ADD_SUBDIRECTORY(unittest)
