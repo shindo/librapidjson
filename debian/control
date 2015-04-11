@@ -1,0 +1,22 @@
+Source: librapidjson
+Priority: optional
+Maintainer: Danil Osherov <shindo@yandex-team.ru>
+Build-Depends:
+	debhelper (>= 7),
+	cmake,
+	libgtest-dev,
+	valgrind,
+Standards-Version: 3.8.0
+Homepage: https://github.com/miloyip/rapidjson
+Vcs-git: git://github.com/miloyip/rapidjson.git
+Vcs-Browser: https://github.com/miloyip/rapidjson
+
+Package: librapidjson0-dev
+Section: libdevel
+Architecture: any
+Depends:
+	${misc:Depends},
+Provides: librapidjson-dev-virtual
+Conflicts: librapidjson-dev-virtual
+Description: RapidJSON - Development files
+ A fast JSON parser/generator for C++ with both SAX/DOM style API.
