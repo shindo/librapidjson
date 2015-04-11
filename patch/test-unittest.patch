@@ -1,0 +1,50 @@
+diff --git a/rapidjson/test/unittest/unittest.h b/rapidjson/test/unittest/unittest.h
+index 800fbab..75bd4a4 100644
+--- a/rapidjson/test/unittest/unittest.h
++++ b/rapidjson/test/unittest/unittest.h
+@@ -47,6 +47,10 @@
+ #pragma GCC diagnostic pop
+ #endif
+ 
++#if defined(__GNUC__) && (__GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 6))
++#pragma GCC diagnostic ignored "-Wswitch-default"
++#endif
++
+ template <typename Ch>
+ inline unsigned StrLen(const Ch* s) {
+     const Ch* p = s;
+diff --git a/rapidjson/test/unittest/valuetest.cpp b/rapidjson/test/unittest/valuetest.cpp
+index 846b1c8..27f8f2d 100644
+--- a/rapidjson/test/unittest/valuetest.cpp
++++ b/rapidjson/test/unittest/valuetest.cpp
+@@ -22,6 +22,30 @@
+ #include "rapidjson/document.h"
+ #include <algorithm>
+ 
++
++#include <ostream>
++#include "rapidjson/stringbuffer.h"
++#include "rapidjson/writer.h"
++
++RAPIDJSON_NAMESPACE_BEGIN
++
++template <typename Encoding, typename Allocator>
++std::ostream& operator<< (std::ostream& stream, const GenericValue<Encoding, Allocator>& value) {
++    StringBuffer buffer;
++    Writer<StringBuffer> writer(buffer);
++    value.Accept(writer);
++
++    return stream << buffer.GetString();
++}
++
++template <bool Const, typename Encoding, typename Allocator>
++std::ostream& operator<< (std::ostream& stream, const GenericMemberIterator<Const, Encoding, Allocator>& iterator) {
++    return stream << (void*)&*iterator;
++}
++
++RAPIDJSON_NAMESPACE_END
++
++
+ using namespace rapidjson;
+ 
+ TEST(Value, DefaultConstructor) {
