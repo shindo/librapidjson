@@ -14,6 +14,9 @@ md5sums=('SKIP')
 prepare() {
 	cd "$srcdir/$pkgname"
 	git submodule update --init --recursive
+
+	patch -p1 < patch/test-CMakeLists.txt.patch
+	patch -p1 < patch/test-unittest.patch
 }
 
 build() {
