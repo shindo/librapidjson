@@ -5,20 +5,21 @@ DH_VERBOSE = 1
 
 DEB_PARALLEL_JOBS ?= $(shell getconf _NPROCESSORS_ONLN 2>/dev/null || echo 1)
 
+RAPIDJSON_API_VERSION := 1
+
 BUILDDIR := debian/build
 DESTDIR := ${CURDIR}/debian/tmp
 
 CMAKE_EXTRA_FLAGS := \
-	-DRAPIDJSON_BUILD_DOC=OFF \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DRAPIDJSON_BUILD_EXAMPLES=OFF \
+	-DRAPIDJSON_BUILD_THIRDPARTY_GTEST=ON \
 	-DRAPIDJSON_HAS_STDSTRING=ON \
-	-DCMAKE_CXX_FLAGS=-mno-avx
+	-DCMAKE_CXX_FLAGS=-mno-avx \
+	-DINCLUDE_INSTALL_DIR=/usr/include/RapidJSON-${RAPIDJSON_API_VERSION} \
+	-DCMAKE_INSTALL_DIR=/usr/lib/cmake/RapidJSON-${RAPIDJSON_API_VERSION}
 
-
-apply-patches:
-	TMP=/tmp patch -p1 --verbose < patch/test-CMakeLists.txt.patch
-	TMP=/tmp patch -p1 --verbose < patch/test-unittest.patch
-
-configure-librapidjson: apply-patches
+configure-librapidjson:
 	dh_auto_configure --buildsystem=cmake \
 		--sourcedirectory=${CURDIR}/rapidjson --builddirectory=${BUILDDIR}/rapidjson \
 		-- ${CMAKE_EXTRA_FLAGS}
@@ -34,7 +35,8 @@ override_dh_auto_build: \
 override_dh_auto_install:
 	set -e; \
 		cd ${BUILDDIR}/rapidjson; \
-		${MAKE} install DESTDIR=${DESTDIR}
+		${MAKE} install DESTDIR=${DESTDIR}; \
+		mv ${DESTDIR}/usr/lib/pkgconfig/RapidJSON.pc ${DESTDIR}/usr/lib/pkgconfig/RapidJSON-${RAPIDJSON_API_VERSION}.pc
 
 override_dh_auto_test:
 	set -e; \

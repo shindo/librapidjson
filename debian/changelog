@@ -1,3 +1,44 @@
+librapidjson (1.0.0) unstable; urgency=low
+
+  * Fixes:
+    - Fixed a bug in trimming long number sequence
+    - Fix double quote in unicode escape
+    - Fix negative zero roundtrip (double only)
+    - Remove an invalid Document::ParseInsitu() API
+    - Remove dead branches and add more unit tests for coverage
+
+  * Features:
+    - RFC 7159
+    - Optional Iterative Parser
+    - Deep-copy values
+    - Error code and message
+    - ASCII Encoding
+    - kParseStopWhenDoneFlag
+    - kParseFullPrecisionFlag
+    - Add Key() to handler concept
+    - C++11 compatibility and support
+    - Standardize behavior of memcpy() and malloc()
+    - Add version macros
+
+  * Optimizations
+    - Optimized number-to-string and vice versa conversions
+    - Short-String Optimization
+    - Local stream optimization by traits
+
+  * Build
+    - Migrating from Premake to CMAKE
+    - Remove other JSON libraries for performance comparison
+    - Travis & Appveyor Continuous Integration, with Valgrind verification
+    - Resolve all warning reports
+
+  * Documentation
+    - Redo all documentation
+    - English, Simplified Chinese
+    - Doxygen with Markdown
+    - Gitbook
+
+ -- Danil Osherov <shindo@yandex-team.ru>  Sat, 11 Apr 2015 22:00:00 +0400
+
 librapidjson (0.99.9) unstable; urgency=low
 
   * Initial release.
