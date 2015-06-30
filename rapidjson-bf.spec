@@ -1,7 +1,7 @@
 %global __api_version 1
 
 Name: librapidjson
-Version: 1.0.1
+Version: 1.0.2
 Release: 1%{?dist}
 Summary: RapidJSON
 License: MIT
@@ -80,6 +80,18 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 30 2015 Danil Osherov <shindo@yandex-team.ru> 1.0.2
+- Fixes:
+- * Include rapidjson.h for all internal/error headers.
+- * Parsing some numbers incorrectly in full-precision mode (kFullPrecisionParseFlag)
+- * Fix alignment of 64bit platforms
+- * Fix MemoryPoolAllocator::Clear() to clear user-buffer
+- * Change Document::ParseStream() to use stack allocator for Reader
+- * CMakeLists for include as a thirdparty in projects
+
+- Features:
+- * Add Value::XXXMember(...) overloads for std::string
+
 * Tue Jun 30 2015 Danil Osherov <shindo@yandex-team.ru> 1.0.1
 - Fixes:
 - * Parsing of some numbers (e.g. "1e-00011111111111") causing assertion

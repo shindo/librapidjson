@@ -3,7 +3,7 @@
 tar czf rapidjson.tar.gz rapidjson/
 
 pkgname=librapidjson
-pkgver=1.0.1
+pkgver=1.0.2
 pkgrel=1
 pkgdesc="A fast JSON parser/generator for C++ with both SAX/DOM style API"
 arch=('any')
