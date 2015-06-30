@@ -1,3 +1,11 @@
+librapidjson (1.0.1) unstable; urgency=low
+
+  * Fixes:
+    - Parsing of some numbers (e.g. "1e-00011111111111") causing assertion
+    - Visual C++ 32-bit compilation error in diyfp.h
+
+ -- Danil Osherov <shindo@yandex-team.ru>  Tue, 30 Jun 2015 22:00:00 +0400
+
 librapidjson (1.0.0) unstable; urgency=low
 
   * Fixes:

@@ -1,7 +1,7 @@
 %global __api_version 1
 
 Name: librapidjson
-Version: 1.0.0
+Version: 1.0.1
 Release: 1%{?dist}
 Summary: RapidJSON
 License: MIT
@@ -80,6 +80,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 30 2015 Danil Osherov <shindo@yandex-team.ru> 1.0.1
+- Fixes:
+- * Parsing of some numbers (e.g. "1e-00011111111111") causing assertion
+- * Visual C++ 32-bit compilation error in diyfp.h
+
 * Mon Jun 29 2015 Danil Osherov <shindo@yandex-team.ru> 1.0.0
 - Fixes:
 - * Fixed a bug in trimming long number sequence
