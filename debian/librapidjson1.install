@@ -1,3 +1,3 @@
-usr/include/*
+usr/include/RapidJSON-1/*
 usr/lib/cmake/*
 usr/lib/pkgconfig/*
